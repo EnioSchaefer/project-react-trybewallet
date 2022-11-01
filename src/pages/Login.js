@@ -84,7 +84,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 Login.propTypes = {
   actionLogin: PropTypes.func.isRequired,
-  history: PropTypes.func.isRequired,
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(Login);

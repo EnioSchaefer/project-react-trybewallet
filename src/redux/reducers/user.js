@@ -11,7 +11,7 @@ const user = (state = INITIAL_STATE, action) => {
       email: action.email,
     };
   default:
-    return state;
+    return { ...state };
   }
 };
 

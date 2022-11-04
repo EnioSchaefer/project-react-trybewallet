@@ -32,21 +32,12 @@ class WalletForm extends Component {
   };
 
   incrementWallet = async () => {
-    const { id, description, value, tag, method, currency } = this.state;
+    const { id } = this.state;
     const { actionCreateExpenses, actionExchangeRate, expenses } = this.props;
     const exchangeRates = await actionExchangeRate();
 
     this.setState({ id: id + 1, description: '', value: '' });
-    const newExpense = {
-      id,
-      description,
-      tag,
-      value,
-      method,
-      currency,
-      exchangeRates,
-    };
-    return actionCreateExpenses([...expenses, newExpense]);
+    return actionCreateExpenses([...expenses, { ...this.state, exchangeRates }]);
   };
 
   render() {

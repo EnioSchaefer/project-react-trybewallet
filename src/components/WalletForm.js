@@ -149,7 +149,7 @@ WalletForm.propTypes = {
   actionExchangeRate: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
   currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
-  expenses: PropTypes.arrayOf().isRequired,
+  expenses: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletForm);

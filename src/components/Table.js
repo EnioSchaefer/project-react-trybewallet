@@ -52,7 +52,7 @@ class Table extends Component {
                   <td>
                     <button
                       type="button"
-                      onClick={ () => this.editExpense() }
+                      onClick={ () => (this.editExpense()) }
                     >
                       Editar
                     </button>
@@ -82,7 +82,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 Table.propTypes = {
-  expenses: PropTypes.arrayOf().isRequired,
+  expenses: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   actionRemoveExpense: PropTypes.func.isRequired,
 };
 

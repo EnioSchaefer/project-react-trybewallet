@@ -20,7 +20,10 @@ class Header extends Component {
     return (
       <div>
         <div>
-          <span data-testid="total-field">{expenses.length === 0 ? 0 : finalValue}</span>
+          <span data-testid="total-field">
+            {expenses
+              .length === 0 ? '0.00' : Number(finalValue).toFixed(2)}
+          </span>
           <span data-testid="header-currency-field">BRL</span>
         </div>
         <span data-testid="email-field">{ email }</span>

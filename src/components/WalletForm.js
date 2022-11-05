@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { fetchCurrencies, createExpenses, fetchExchangeRate } from '../redux/actions';
+import { fetchCurrencies, createExpenses,
+  fetchExchangeRate, editExpense } from '../redux/actions';
 
 class WalletForm extends Component {
   constructor() {
@@ -40,8 +41,22 @@ class WalletForm extends Component {
     return actionCreateExpenses([...expenses, { ...this.state, exchangeRates }]);
   };
 
+  editExpense = () => {
+    const { actionEditExpense, beingEdited, expenses } = this.props;
+    const removedExpense = expenses.filter((item) => item.id !== beingEdited.id);
+    const sorting = -1;
+
+    const updatedExpenses = [
+      ...removedExpense,
+      { ...beingEdited, ...this.state, id: beingEdited.id },
+    ].sort((a, b) => (a.id > b.id ? 1 : sorting));
+
+    this.setState({ description: '', value: '' });
+    return actionEditExpense(updatedExpenses);
+  };
+
   render() {
-    const { isFetching, currencies } = this.props;
+    const { isFetching, isEditing, currencies } = this.props;
     const { description, value } = this.state;
     if (isFetching) return <p>Loading...</p>;
     return (
@@ -120,12 +135,24 @@ class WalletForm extends Component {
             </select>
           </label>
         </form>
-        <button
-          type="button"
-          onClick={ () => this.incrementWallet() }
-        >
-          Adicionar Despesa
-        </button>
+        { isEditing
+          ? (
+            <button
+              type="button"
+              onClick={ () => this.editExpense() }
+            >
+              Editar despesa
+            </button>
+          )
+          : (
+            <button
+              type="button"
+              onClick={ () => this.incrementWallet() }
+            >
+              Adicionar despesa
+            </button>
+          )}
+
       </div>
     );
   }
@@ -134,13 +161,16 @@ class WalletForm extends Component {
 const mapStateToProps = (state) => ({
   currencies: state.wallet.currencies,
   isFetching: state.wallet.isFetching,
+  isEditing: state.wallet.isEditing,
   expenses: state.wallet.expenses,
+  beingEdited: state.wallet.beingEdited,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   actionCurrencies: () => dispatch(fetchCurrencies()),
   actionCreateExpenses: (expenses) => dispatch(createExpenses(expenses)),
   actionExchangeRate: () => dispatch(fetchExchangeRate()),
+  actionEditExpense: (updatedExpenses) => dispatch(editExpense(updatedExpenses)),
 });
 
 WalletForm.propTypes = {
@@ -148,6 +178,9 @@ WalletForm.propTypes = {
   actionCreateExpenses: PropTypes.func.isRequired,
   actionExchangeRate: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
+  isEditing: PropTypes.bool.isRequired,
+  beingEdited: PropTypes.shape({ id: PropTypes.number }).isRequired,
+  actionEditExpense: PropTypes.func.isRequired,
   currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
   expenses: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };

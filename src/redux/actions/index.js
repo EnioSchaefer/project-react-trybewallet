@@ -5,6 +5,8 @@ export const RECEIVE_CURRENCIES = 'RECEIVE_CURRENCIES';
 export const REQUEST_CURRENCIES_STARTED = 'REQUEST_CURRENCIES_STARTED';
 export const RECEIVE_EXCHANGE_DATA = 'RECEIVE_EXCHANGE_DATA';
 export const DELETE_EXPENSE = 'DELETE_EXPENSE';
+export const START_EDITING = 'START_EDITING';
+export const EDIT_EXPENSE = 'EDIT_EXPENSE';
 
 export const userLogin = (email) => ({ type: USER_LOGIN, email });
 
@@ -21,7 +23,15 @@ export const receiveExchangeRates = (currencyData) => ({
   type: RECEIVE_EXCHANGE_DATA, payload: currencyData,
 });
 
-export const removeExpense = ({ id }) => ({ type: DELETE_EXPENSE, id });
+export const startEditingExpense = (beingEdited) => ({
+  type: START_EDITING, beingEdited,
+});
+
+export const editExpense = (editedExpenses) => ({ type: EDIT_EXPENSE, editedExpenses });
+
+export const removeExpense = (updatedExpenses) => ({
+  type: DELETE_EXPENSE, updatedExpenses,
+});
 
 export function fetchExchangeRate() {
   return () => fetch('https://economia.awesomeapi.com.br/json/all')

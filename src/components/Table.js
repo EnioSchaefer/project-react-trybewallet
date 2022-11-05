@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { removeExpense } from '../redux/actions';
+import { removeExpense, startEditingExpense } from '../redux/actions';
 
 class Table extends Component {
-  removeExpense = (expense) => {
-    const { expenses, actionRemoveExpense } = this.props;
-    const findExpense = Object.values(expenses).find(({ id }) => id === expense.id);
-    actionRemoveExpense(findExpense);
+  removeExpense = (currentExpense) => {
+    const { actionRemoveExpense, expenses } = this.props;
+    const updatedExpenses = expenses.filter((item) => item.id !== currentExpense.id);
+
+    actionRemoveExpense(updatedExpenses);
+  };
+
+  editExpense = (beingEdited) => {
+    const { actionStartEditing } = this.props;
+    actionStartEditing(beingEdited);
   };
 
   render() {
@@ -52,7 +58,8 @@ class Table extends Component {
                   <td>
                     <button
                       type="button"
-                      onClick={ () => (this.editExpense()) }
+                      data-testid="edit-btn"
+                      onClick={ () => this.editExpense(expense) }
                     >
                       Editar
                     </button>
@@ -78,12 +85,14 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actionRemoveExpense: (expense) => dispatch(removeExpense(expense)),
+  actionRemoveExpense: (updatedExpenses) => dispatch(removeExpense(updatedExpenses)),
+  actionStartEditing: (beingEdited) => dispatch(startEditingExpense(beingEdited)),
 });
 
 Table.propTypes = {
   expenses: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   actionRemoveExpense: PropTypes.func.isRequired,
+  actionStartEditing: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Table);
